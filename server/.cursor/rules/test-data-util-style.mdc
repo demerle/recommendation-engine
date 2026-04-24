@@ -1,0 +1,12 @@
+---
+description: Shared test fixture builder conventions
+globs: src/test/java/**/TestDataUtil.java
+alwaysApply: false
+---
+
+# Test Data Utility Style
+
+- Keep a single static fixture utility class with private constructor.
+- Provide focused factory methods (`createTestXxxA/B`) returning fully built entities.
+- Build fixtures with entity builders to keep defaults explicit and readable.
+- Keep values deterministic and simple to support stable integration assertions.

@@ -1,0 +1,15 @@
+---
+description: Service implementation patterns in deeroot-shop
+globs: src/main/java/**/services/impl/*.java
+alwaysApply: false
+---
+
+# Service Implementations Style
+
+- Implement service interfaces in `services/impl` and annotate classes with `@Service`.
+- Use constructor injection and keep collaborators as class fields.
+- Keep CRUD methods direct and repository-backed (`findAll`, `find`, `save`, `delete`, `exists`).
+- Return `Optional<T>` from lookup methods where absent state is expected upstream.
+- Keep orchestration logic in services for user/cart/purchase mutations and cross-repository operations.
+- Prefer readable imperative loops and guard clauses for collection mutation flows.
+- Keep token/auth logic in auth service implementations; controllers should call service entry points.

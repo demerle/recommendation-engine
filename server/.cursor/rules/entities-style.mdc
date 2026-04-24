@@ -1,0 +1,15 @@
+---
+description: JPA entity conventions used in deeroot-shop
+globs: src/main/java/**/domain/entities/*.java
+alwaysApply: false
+---
+
+# Entities Style
+
+- Use Lombok for entity boilerplate (`@Data`, constructors, `@Builder`) to keep classes compact.
+- Define table and column mapping directly on fields with explicit `@Table`/`@Column` metadata.
+- Use `@GeneratedValue(strategy = GenerationType.SEQUENCE)` for primary keys.
+- Model collection relationships as `Set<>` with `@Builder.Default` and eager initialization.
+- Keep join table names explicit (`user_roles`, `user_owned_items`, etc.) with `@JoinTable`.
+- Preserve practical domain helper methods on model objects when useful (`toString()`, derived view data).
+- Keep entity field names aligned with DTO names to support simple mapper-based conversion.

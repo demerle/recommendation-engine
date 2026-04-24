@@ -1,0 +1,13 @@
+---
+description: Mapper conventions for entity/DTO conversion
+globs: src/main/java/**/mappers/**/*.java
+alwaysApply: false
+---
+
+# Mappers Style
+
+- Keep mapper interfaces small and explicit (`fromXDto`, `toXDto`).
+- Implement mappers in `mappers/impl` using `ModelMapper`.
+- Annotate mapper implementations with `@Component`.
+- Prefer 1:1 field naming between DTOs and entities to keep mapping simple.
+- Avoid business rules in mappers; use them only for shape conversion.

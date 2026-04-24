@@ -1,10 +1,10 @@
-package reccommendation_engine.demo;
+package reccommendation_engine.RecEngine;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DemoApplicationTests {
+class RecEngineApplicationTests {
 
 	@Test
 	void contextLoads() {

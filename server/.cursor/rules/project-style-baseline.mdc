@@ -1,0 +1,12 @@
+---
+description: Global deeroot-shop coding baseline
+alwaysApply: true
+---
+
+# Project Baseline
+
+- Prefer pragmatic, readable Java over premature abstraction.
+- Keep package boundaries clear: `controllers`, `services`, `repositories`, `domain`, `security`, `config`.
+- Favor explicit control flow and guard clauses for auth/data validation branches.
+- Keep API responses status-driven with Spring `ResponseEntity`.
+- Preserve existing naming and endpoint style unless a task explicitly requests a refactor.

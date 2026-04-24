@@ -1,0 +1,13 @@
+---
+description: Repository integration test patterns
+globs: src/test/java/**/repositories/*.java
+alwaysApply: false
+---
+
+# Repository Integration Tests Style
+
+- Use `@SpringBootTest` integration tests for repository behavior instead of mocked repositories.
+- Reset persistence state between tests with `@DirtiesContext` and transactional rollback.
+- Arrange entities with `TestDataUtil`, persist via repository, then verify with fresh repository reads.
+- Assert with AssertJ (`assertThat`) and validate both presence and field equality.
+- Cover baseline CRUD semantics (`create`, `update`, `delete`, `findAll`) per repository.

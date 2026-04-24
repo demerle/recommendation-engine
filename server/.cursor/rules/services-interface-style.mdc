@@ -1,0 +1,12 @@
+---
+description: Service interface boundary conventions
+globs: src/main/java/**/services/*.java
+alwaysApply: false
+---
+
+# Service Interfaces Style
+
+- Keep service interfaces in `services` and implementations in `services/impl`.
+- Define clear domain operations with minimal framework coupling in signatures.
+- Use `Optional<T>` and collection returns where absence/multiplicity is core to the contract.
+- Keep interface method naming direct and CRUD-oriented for core entities.

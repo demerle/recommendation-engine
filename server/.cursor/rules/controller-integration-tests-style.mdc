@@ -1,0 +1,14 @@
+---
+description: MockMvc integration test conventions for controllers
+globs: src/test/java/**/controllers/*.java
+alwaysApply: false
+---
+
+# Controller Integration Tests Style
+
+- Use full-context tests with `@SpringBootTest` and `@AutoConfigureMockMvc`.
+- Reset state each test with `@DirtiesContext(BEFORE_EACH_TEST_METHOD)` and transactional rollback.
+- Use `@WithMockUser` to exercise secured controller paths.
+- Drive endpoint behavior through `MockMvcRequestBuilders` and assert status + JSON payload fields.
+- Seed test entities with `TestDataUtil` factory methods and persist through service/repository.
+- Keep test names verbose and behavior-driven (`testThat...` naming style).

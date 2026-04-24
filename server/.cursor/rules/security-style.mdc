@@ -1,0 +1,13 @@
+---
+description: JWT auth and user details conventions
+globs: src/main/java/**/security/*.java
+alwaysApply: false
+---
+
+# Security Style
+
+- Keep JWT logic service-driven: authenticate, validate token, and generate token in auth service.
+- In request filters, extract `Authorization: Bearer` token and set Spring security context when valid.
+- Fail soft on malformed/invalid token in filters; continue request chain without authentication context.
+- Use a project-specific `UserDetails` and `UserDetailsService` wrapper around `User` entity lookup.
+- Keep helper methods private and small (`extractToken`, signing key construction, claim extraction).

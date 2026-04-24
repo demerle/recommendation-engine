@@ -1,0 +1,13 @@
+---
+description: Spring Data repository conventions for deeroot-shop
+globs: src/main/java/**/repositories/*.java
+alwaysApply: false
+---
+
+# Repositories Style
+
+- Repositories are thin interfaces extending `JpaRepository<Entity, Long>`.
+- Keep `@Repository` on interfaces for clarity and consistent style.
+- Add only targeted finder methods needed by services (for example `findByEmail`, `findByFileName`).
+- Use `Optional<T>` for finder return values unless null semantics are intentionally required in service code.
+- Avoid business logic in repository layer; put orchestration in services.

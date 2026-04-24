@@ -1,0 +1,16 @@
+---
+description: Controller patterns for deeroot-shop API endpoints
+globs: src/main/java/**/controllers/*.java
+alwaysApply: false
+---
+
+# Controllers Style
+
+- Keep controller base routes explicit via `@RequestMapping(path = "/api...")`.
+- Use constructor injection for required collaborators; avoid field injection in new code.
+- Return `ResponseEntity` with explicit status branches (`OK`, `CREATED`, `NOT_FOUND`, `UNAUTHORIZED`, `FORBIDDEN`, `CONFLICT`).
+- Convert entities to DTOs in controllers through mapper interfaces; do not leak entities in response bodies.
+- For auth-aware endpoints, guard early on `@AuthenticationPrincipal UserDetails` null checks and return quickly.
+- Keep role gates close to endpoint logic (`@PreAuthorize` plus authority checks when needed by flow).
+- Prefer straightforward imperative flow over nested abstractions for request validation and branching.
+- Keep endpoint paths and naming REST-like (`/music-items`, `/users/cart`, `/checkout/...`).

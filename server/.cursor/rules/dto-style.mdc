@@ -1,0 +1,13 @@
+---
+description: DTO shape and utility method conventions
+globs: src/main/java/**/domain/dto/**/*.java
+alwaysApply: false
+---
+
+# DTO Style
+
+- Use Lombok for DTO boilerplate (`@Data`, constructors, and `@Builder` when useful).
+- Keep DTOs transport-focused and aligned with API payload fields.
+- Prefer primitive wrappers (`Long`, `Double`, `Integer`) for nullable API values.
+- Allow lightweight utility helpers on DTOs when they directly support request building (for example price scaling helpers).
+- Keep auth/payment DTOs minimal and explicit, with no persistence annotations.

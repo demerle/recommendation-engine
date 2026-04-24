@@ -1,0 +1,13 @@
+---
+description: Spring config and startup seeding conventions
+globs: src/main/java/**/config/*.java
+alwaysApply: false
+---
+
+# Config Style
+
+- Use `@Configuration` classes for bean wiring and cross-cutting setup.
+- Keep bean methods explicit and focused (`ModelMapper`, auth manager, password encoder, filters).
+- Prefer straightforward fluent Spring config over custom abstraction layers.
+- Keep startup data bootstrapping in dedicated components (`CommandLineRunner`) with idempotent checks.
+- Treat environment-driven behavior via `@Value` flags and branch clearly by environment intent.
