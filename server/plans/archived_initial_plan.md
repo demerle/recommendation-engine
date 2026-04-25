@@ -2,7 +2,7 @@
 
 ## Project Name
 **Codename:** taste-graph  
-**Goal:** Build a Phase 1 MVP that can import anime/manga consumption history, store users/items/interactions, compute personalized recommendations using a hybrid recommender, and expose a simple API/UI for recommendation + feedback.
+**Goal:** Build a Phase 1 MVP that can import anime/manga consumption history, store users/items/interactions, compute personalized recommendations using a hybrid recommender baseline, and expose a simple API/UI for recommendation + feedback.
 
 ---
 
@@ -24,8 +24,9 @@ Phase 1 **will** include:
 - anime + manga support
 - AniList-based ingestion
 - Postgres as primary data store
-- a hybrid recommender using LightFM
+- a model-agnostic recommendation pipeline with a LightFM baseline
 - a simple item metadata schema
+- pre-trained text embeddings from AniList metadata (title/synopsis/tags)
 - explicit user feedback capture
 - recommendation API
 - recommendation explanation templates
@@ -49,7 +50,9 @@ Phase 1 **will** include:
   - rating
   - progress
 - Build item feature vectors from metadata
-- Train a hybrid recommender using LightFM
+- Build item features from metadata + pre-trained text embeddings
+- Train a hybrid recommender baseline using LightFM
+- Define and apply interaction weighting for implicit feedback training
 - Generate top-N recommendations
 - Expose API endpoints for:
   - user import
@@ -57,12 +60,15 @@ Phase 1 **will** include:
   - feedback submission
 - Basic admin scripts for retraining and backfilling
 - Basic explanation layer using structured reasons
+- Offline model evaluation with Recall@K and NDCG@K
+- Track model runs and metrics for comparison
 
 ## Out of Scope
 - NovelUpdates integration
 - manhwa-specific dedicated ingestion
 - graph database
 - vector database
+- hosted recommender platforms (e.g., AWS Personalize, Google Recommendations AI) for Phase 1
 - free-text conversational recommendations
 - creator/studio graph reasoning
 - multi-tenant enterprise infra
@@ -121,18 +127,19 @@ Anime/manga users who:
 ---
 
 ## 4.3 Recommender Model
-**Decision:** Use **LightFM** as the Phase 1 recommendation model.
+**Decision:** Use a **model-agnostic recommendation architecture** with **LightFM as the Phase 1 baseline**.
 
 **Why:**
-- supports hybrid recommendation
-- combines collaborative + content features
-- excellent for sparse data
-- fast enough for MVP
-- simpler than overbuilding deep ranking stacks
+- keeps algorithm choices flexible while starting with a proven hybrid baseline
+- LightFM supports collaborative + content features well for sparse data
+- enables future migration to deep models without backend/service redesign
+- fast enough for MVP without overbuilding early ranking stacks
 
 **Phase 1 model objective:** Generate top-N recommendations for each user based on:
 - historical interactions
-- item metadata features
+- item metadata + text-embedding features
+
+**Interface rule:** The Python recommender should expose a stable train/score contract and write outputs to versioned recommendation tables so model internals can change independently of the API layer.
 
 ---
 
@@ -160,6 +167,7 @@ Anime/manga users who:
 
 **Rule:** Introduce Prefect only when >5 recurring jobs exist.
 **Integration rule:** Python jobs should write trained artifacts and/or generated recommendations back to Postgres so the Spring Boot API can serve results without depending on Python at request time.
+**Training data rule:** Store raw interaction events and transform them into weighted implicit feedback during training (status/progress/rating/recency/source aware), so weighting can evolve without data loss.
 
 ---
 
@@ -174,6 +182,7 @@ Anime/manga users who:
 - reduces operational complexity compared with a real-time cross-language inference path
 
 **Phase 1 recommendation:** Prefer batch scoring plus Postgres handoff over a live Python scoring service.
+**Boundary contract:** Python accepts interactions + item features and emits versioned recommendation artifacts/tables; Spring Boot reads only from Postgres and stays model-agnostic.
 
 ---
 
@@ -204,15 +213,28 @@ Anime/manga users who:
 - Python job
 - internal-only subsystem, not exposed to clients
 - builds user-item interaction matrix
-- builds item feature matrix
-- trains LightFM model
+- builds item feature matrix from metadata + embeddings
+- applies weighted implicit feedback transformation
+- trains LightFM baseline model
 - saves model artifacts and metadata
 
-### 4. Recommendation Job / Service
+### 4. Feature / Embedding Job
+- Python job
+- computes/stores pre-trained embeddings from item text fields (title/synopsis/tags)
+- refreshes embeddings for new or updated catalog items
+
+### 5. Recommendation Job / Service
 - Python batch scoring job
 - loads trained model
 - computes candidate rankings
 - writes recommendations and explanation inputs into Postgres for the Spring Boot API to serve
+- stores `model_version` and `generated_at` for each recommendation record
+
+### 6. Evaluation / Experiment Job
+- Python job
+- applies validation split strategy (time-based or leave-one-out)
+- computes Recall@K and NDCG@K
+- records run configuration + metrics for model comparison
 
 ---
 
@@ -233,6 +255,10 @@ Anime/manga users who:
 - scipy
 - scikit-learn
 - LightFM
+- sentence-transformers (or equivalent pre-trained embedding library)
+
+## Future-compatible model path (not Phase 1 scope)
+- optional deep-learning stack for later model swaps (PyTorch or TensorFlow/TFRS)
 
 ## Database
 - PostgreSQL 15+
