@@ -1,3 +1,18 @@
 spring:
   application:
-    name: demo
+    name: recommendation-engine
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/mydatabase}
+    username: ${DB_USERNAME:myuser}
+    password: ${DB_PASSWORD:secret}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+
+anilist:
+  base-url: https://graphql.anilist.co
+  connect-timeout: 5s
+  read-timeout: 30s
+  user-agent: recommendation-engine

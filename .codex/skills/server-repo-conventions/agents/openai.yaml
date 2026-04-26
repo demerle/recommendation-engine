@@ -1,0 +1,4 @@
+interface:
+  display_name: "Server Repo Conventions"
+  short_description: "Lean repo-local style and workflow guide"
+  default_prompt: "Use $server-repo-conventions to work in this repository while loading only the relevant local conventions."
